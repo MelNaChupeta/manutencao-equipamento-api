@@ -16,7 +16,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User findById (String id) {
+    public User findById (Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Erro ao buscar user " + id));
     }
     

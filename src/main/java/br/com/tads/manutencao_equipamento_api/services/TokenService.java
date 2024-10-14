@@ -62,7 +62,7 @@ public class TokenService {
 
 	}
 
-	public String getIdUser(String token) {
+	public Long getIdUser(String token) {
 		Claims claims = Jwts.parser()
 				.setSigningKey(
 						Base64.getEncoder().encodeToString("MANUTENCAO_EQUIPAMENTO".getBytes(StandardCharsets.UTF_8)))
@@ -95,7 +95,7 @@ public class TokenService {
 
 		if (user.isStatus()) {
 			UserDTO subject = null;
-			subject = new UserDTO(user.getId(), user.getEmail(), user.getUsername(), user.getRole());
+			subject = new UserDTO(user.getId(), user.getEmail(), user.getUsername(), user.getRole().getDescricao());
 
 			ObjectMapper mapper = new ObjectMapper();
 			token = Jwts.builder()

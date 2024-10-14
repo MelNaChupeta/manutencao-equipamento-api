@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.tads.manutencao_equipamento_api.entities.entity.User;
 
-public interface UserRepository extends JpaRepository<User,String>{
+public interface UserRepository extends JpaRepository<User,Long>{
 
     Optional<User> findByEmailAndStatus(String email, boolean i);
 

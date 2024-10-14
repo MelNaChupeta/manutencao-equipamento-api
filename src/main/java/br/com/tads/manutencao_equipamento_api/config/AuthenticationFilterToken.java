@@ -51,7 +51,7 @@ public class AuthenticationFilterToken extends OncePerRequestFilter {
     }
 
     private void authUser(String token) {
-        String idUser = tokenService.getIdUser(token);
+        Long idUser = tokenService.getIdUser(token);
         User user = userRepository.findById(idUser).get();
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
                 user.getAuthorities());
