@@ -1,4 +1,5 @@
 package br.com.tads.manutencao_equipamento_api.entities.entity;
+
 import org.springframework.data.relational.core.mapping.Table;
 
 import jakarta.persistence.Entity;
@@ -13,15 +14,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
+
 @Entity
-@Table(name="EMPLOYEE")
+@Table(name="FUNCIONARIO")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Client extends User{
+public class Funcionario extends User{
     
-    private String cpf;
-    private String cep;
+    @Id
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private User user;
 
 }

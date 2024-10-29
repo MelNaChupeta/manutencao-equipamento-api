@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: root
-      POSTGRES_DB: web2-db
+      POSTGRES_DB: web2_db
     ports:
       - "5432:5432"
     command: -p 5431

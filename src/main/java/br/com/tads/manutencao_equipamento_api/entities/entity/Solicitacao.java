@@ -32,11 +32,11 @@ public class Solicitacao {
     
     @ManyToOne
     @JoinColumn(name="client_id")
-    private Client client;
+    private Cliente client;
     
     @ManyToOne
     @JoinColumn(name="employee_id")
-    private Employee funcionario;
+    private Funcionario funcionario;
 
     private String equipamento; 
     private String descricaoEquipamento; 

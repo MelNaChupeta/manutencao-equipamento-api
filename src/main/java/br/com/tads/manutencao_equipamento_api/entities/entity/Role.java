@@ -1,8 +1,8 @@
 package br.com.tads.manutencao_equipamento_api.entities.entity;
 
 public enum Role {
-    CLIENT("client"),
-    EMPLOYEE("employee");
+    CLIENT("CLIENTE"),
+    EMPLOYEE("FUNCIOARIO");
     
 
     private final String descricao;

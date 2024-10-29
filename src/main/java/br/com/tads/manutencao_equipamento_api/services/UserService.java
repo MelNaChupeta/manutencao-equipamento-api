@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencao_equipamento_api.entities.entity.User;
-import br.com.tads.manutencao_equipamento_api.exception.UserNotFoundException;
+import br.com.tads.manutencao_equipamento_api.exceptions.UserNotFoundException;
 import br.com.tads.manutencao_equipamento_api.repositories.UserRepository;
 
 @Service

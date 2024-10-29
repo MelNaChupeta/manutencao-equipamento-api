@@ -33,7 +33,7 @@ public class Movimentacao {
    
     @ManyToOne
     @JoinColumn(name="funcionario_id")
-    private Employee funcionario;
+    private Funcionario funcionario;
 
     @ManyToOne
     @JoinColumn(name="solicitacao_id")

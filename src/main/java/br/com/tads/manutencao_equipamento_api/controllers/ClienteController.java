@@ -1,22 +1,30 @@
 package br.com.tads.manutencao_equipamento_api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tads.manutencao_equipamento_api.commom.Response;
+import br.com.tads.manutencao_equipamento_api.entities.dto.ClienteDTO;
+import br.com.tads.manutencao_equipamento_api.services.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.mail.MessagingException;
 
 @RestController
-@RequestMapping("/category")
-public class CategoryController {
-    @PostMapping("/register")
+@RequestMapping("/cliente")
+public class ClienteController {
+    @Autowired
+	ClienteService service;
+
+	@PostMapping("/registrar")
 	@Operation(summary = "Register category")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
@@ -30,7 +38,7 @@ public class CategoryController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public void register() {
-		System.out.println("OK");
+	public ResponseEntity<Response> register(@RequestBody ClienteDTO clienteDTO) throws MessagingException {
+		return ResponseEntity.ok().body(new Response(true,service.save(clienteDTO)));
 	}
 }

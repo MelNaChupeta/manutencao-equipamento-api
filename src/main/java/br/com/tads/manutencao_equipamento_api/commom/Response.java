@@ -13,19 +13,23 @@ public class Response {
     
     private Boolean status;
     private String message;
-    private Boolean valid;
-
+    private Object data;
     public Response(String message){
         this.message = message;
     }
 
-    public Response(Boolean valid){
-        this.valid = valid;
+    public Response(boolean status) {
+        this.status = status;
     }
 
     public Response(Boolean status, String message){
         this.status = status;
         this.message = message;
+    }
+    
+    public Response(Boolean status, Object data){
+        this.status = status;
+        this.data = data;
     }
 
 }
