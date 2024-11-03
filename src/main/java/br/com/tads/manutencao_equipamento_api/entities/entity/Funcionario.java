@@ -2,6 +2,8 @@ package br.com.tads.manutencao_equipamento_api.entities.entity;
 
 import org.springframework.data.relational.core.mapping.Table;
 
+import br.com.tads.manutencao_equipamento_api.entities.dto.ClienteDTO;
+import br.com.tads.manutencao_equipamento_api.entities.dto.FuncionarioDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,4 +32,7 @@ public class Funcionario extends User{
     @JoinColumn(name = "id")
     private User user;
 
+     public Funcionario(FuncionarioDTO funcionarioDTO) {
+        super(funcionarioDTO.nome() , funcionarioDTO.email() , funcionarioDTO.senha());
+    }
 }

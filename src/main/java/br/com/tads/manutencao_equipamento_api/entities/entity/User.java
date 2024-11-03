@@ -31,6 +31,7 @@ import jakarta.persistence.PreUpdate;
 
 @Entity
 @Table(name="USERS")
+/*Anotação para garatir o mapeamento de uma tabela separada para as entidades filhas*/
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @AllArgsConstructor
@@ -42,8 +43,8 @@ public class User implements UserDetails{
     private Long id;
     @Column(name="EMAIL" , length=64 , unique=true)
     private String email;
-    @Column(name="SENHA" )
-    private String password;
+    @Column(name="SENHA")
+    private String senha;
     @Column(name="NOME" , length=100)
     private String nome;
     private boolean status;
@@ -57,10 +58,16 @@ public class User implements UserDetails{
         this.nome = nome;
         this.email = email;
     }
+    
+    public User(String email , String nome , String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha; 
+    }
 
     @PrePersist
     private void onPrePersist(){
-        this.password = new BCryptPasswordEncoder().encode(password);
+        this.senha = new BCryptPasswordEncoder().encode(senha);
         this.dtHrCriacao = LocalDateTime.now();
     }
     
@@ -79,7 +86,7 @@ public class User implements UserDetails{
 
     @Override
     public String getPassword() {
-       return this.password;
+       return this.senha;
     }
 
     @Override

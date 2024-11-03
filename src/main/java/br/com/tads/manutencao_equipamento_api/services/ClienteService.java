@@ -10,6 +10,7 @@ import br.com.tads.manutencao_equipamento_api.entities.entity.Cliente;
 import br.com.tads.manutencao_equipamento_api.entities.entity.Role;
 import br.com.tads.manutencao_equipamento_api.repositories.ClienteRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
@@ -19,13 +20,14 @@ public class ClienteService {
     @Autowired
     private EmailService emailService;
     
+    @Transactional(rollbackOn = Exception.class)
     public Cliente save(ClienteDTO clienteDTO) throws MessagingException{
         Cliente cliente = new Cliente(clienteDTO);
         cliente.setRole(Role.CLIENT);
-        String password = generateRandomPassword();
-        cliente.setPassword(password);
+        String senha = generateRandomPassword();
+        cliente.setSenha(senha);
         cliente = clienteRepository.save(cliente);
-        emailService.sendHtmlEmail("math.christo@gmail.com" , "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), password));
+        emailService.sendHtmlEmail("math.christo@gmail.com" , "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), senha));
         return cliente;
     }
 

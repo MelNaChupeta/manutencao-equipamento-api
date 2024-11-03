@@ -26,15 +26,20 @@ public class EmailService {
     }
 
     public void sendHtmlEmail(String to, String subject, String htmlBody) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(htmlBody, true);
-        helper.setFrom("equipamentosmatheus@gmail.com");
-
-        mailSender.send(message);
+        try{
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+    
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+            helper.setFrom("equipamentosmatheus@gmail.com");
+    
+            mailSender.send(message);
+        }catch(Exception e) {
+            throw e;
+        }
+       
     }
 
 }

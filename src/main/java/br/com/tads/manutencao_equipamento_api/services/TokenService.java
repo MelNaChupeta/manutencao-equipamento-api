@@ -89,9 +89,9 @@ public class TokenService {
 		// if (userService.validateUser(user, status)) {
 		User user = userService.findByEmail(loginDTO.email());
 
-		String password = userService.findById(user.getId()).getPassword();
+		String senha = userService.findById(user.getId()).getPassword();
 		em.refresh(user);
-		user.setPassword(password);	
+		user.setSenha(senha);	
 
 		if (user.isStatus()) {
 			UserDTO subject = null;
