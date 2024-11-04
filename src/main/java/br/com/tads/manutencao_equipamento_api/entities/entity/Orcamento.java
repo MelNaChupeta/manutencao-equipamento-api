@@ -17,9 +17,8 @@ public class Orcamento {
     private boolean aprovado;
     private String justificativaRejeicao;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Cliente cliente;
+    @JoinColumn(name = "solicitacao_id")
+    private Solicitacao solicitacao;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
