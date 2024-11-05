@@ -1,0 +1,31 @@
+{
+    "name": "manutencao-equipamento-api",
+    "dockerComposeFile": [
+        "./docker-compose.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/home/app",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {},
+        "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
+            "plugins": "git git-flow F-Sy-H zsh-autosuggestions zsh-completions",
+            "omzPlugins": "https://github.com/z-shell/F-Sy-H https://github.com/zsh-users/zsh-autosuggestions https://github.com/zsh-users/zsh-completions"
+        },
+        "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "vscjava.vscode-java-pack",
+                "vscjava.vscode-spring-initializr",
+                "vscjava.vscode-spring-boot-dashboard",
+                "vmware.vscode-spring-boot",
+                "vmware.vscode-boot-dev-pack",
+                "vscjava.vscode-gradle",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}

@@ -3,14 +3,16 @@ services:
   app:
     image: manutencao-equipamento-api
     container_name: manutencao-equipamento-api
-
+    build: .
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://web2-postgres-container:5431/web2_db     
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://web2-postgres-container:5432/web2_db     
     ports:
       - "8080:8080"
     depends_on:
       - db
+    volumes:
+      - ../:/home/app
   db:
     image: postgres:latest
     container_name: web2-postgres-container
@@ -19,6 +21,5 @@ services:
       POSTGRES_USER: root
       POSTGRES_DB: web2_db
     ports:
-      - "5432:5432"
-    command: -p 5431
-    restart: always  
+      - "5431:5432"
+    restart: always

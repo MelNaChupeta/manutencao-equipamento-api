@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim AS build
+FROM openjdk:21-jdk-slim
 
 RUN apt-get update && \
     apt-get install -y wget unzip tzdata && \
@@ -9,17 +9,12 @@ RUN apt-get update && \
 
 ENV TZ=America/Sao_Paulo
 
-WORKDIR /app
+ENV JAVA_TOOL_OPTIONS="-Duser.timezone=America/Sao_Paulo"
 
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+WORKDIR /home/app/
 
-COPY src ./src
-RUN mvn clean install -DskipTests
+COPY . /home/app/
 
-FROM openjdk:21-jdk-slim
-WORKDIR /app
+USER root
 
-COPY --from=build /app/target/*.jar app.jar
-
-ENTRYPOINT ["java", "-Duser.timezone=America/Sao_Paulo", "-jar", "app.jar"]
+CMD tail -f /dev/null
