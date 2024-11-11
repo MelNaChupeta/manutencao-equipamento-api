@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.tads</groupId>
-	<artifactId>manutencao-equipamento-api</artifactId>
+	<artifactId>manutencaoequipamentoapi</artifactId>
 	<version>3.4.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>manutencao-equipamento-api</name>
