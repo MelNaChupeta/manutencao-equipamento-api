@@ -22,7 +22,7 @@ public class FuncionarioService {
     @Transactional(rollbackOn = Exception.class)
     public Funcionario save(FuncionarioDTO funcionarioDTO) throws MessagingException{
         Funcionario funcionario = new Funcionario(funcionarioDTO);
-        funcionario.setRole(Role.FUNCIOARIO);
+        funcionario.setRole(Role.FUNCIONARIO);
         funcionario = repository.save(funcionario);
         return funcionario;
     }
@@ -31,7 +31,7 @@ public class FuncionarioService {
     public Funcionario update(FuncionarioDTO funcionarioDTO , Long id) throws MessagingException{
         Funcionario funcionario = new Funcionario(funcionarioDTO);
         Funcionario funcionarioExists = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Funcionário não encontrado"));
-        funcionario.setRole(Role.FUNCIOARIO);
+        funcionario.setRole(Role.FUNCIONARIO);
         funcionario.setId(id);
         funcionario.setDtHrCriacao(funcionarioExists.getDtHrCriacao()); 
         funcionario = repository.save(funcionario);
