@@ -21,19 +21,19 @@ public class CategoriaService {
 
     @Transactional(rollbackOn = Exception.class)
     public Categoria save(CategoriaDTO categoriaDTO) throws MessagingException{
-        Categoria categoria = new Categoria(/*categoriaDTO*/);
-//        categoria.setRole(Role.CATEGORIA);
+        Categoria categoria = new Categoria(categoriaDTO);
+        categoria.setRole(Role.CATEGORIA);
         categoria = repository.save(categoria);
         return categoria;
     }
 
     @Transactional(rollbackOn = Exception.class)
     public Categoria update(CategoriaDTO categoriaDTO , Long id) throws MessagingException{
-        Categoria categoria = new Categoria(/*categoriaDTO*/);
+        Categoria categoria = new Categoria(categoriaDTO);
         Categoria categoriaExists = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Categoria não encontrada"));
-//        categoria.setRole(Role.CATEGORIA);
+        categoria.setRole(Role.CATEGORIA);
         categoria.setId(id);
-//        categoria.setDtHrCriacao(categoriaExists.getDtHrCriacao());
+        categoria.setDtHrCriacao(categoriaExists.getDtHrCriacao());
         categoria = repository.save(categoria);
         return categoria;
     }
@@ -41,7 +41,7 @@ public class CategoriaService {
     @Transactional(rollbackOn = Exception.class)
     public Categoria delete(Long id) throws MessagingException{
         Categoria categoriaExists = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Categoria não encontrada"));
-//        categoriaExists.setStatus(false);
+        categoriaExists.setStatus(false);
         categoriaExists = repository.save(categoriaExists);
         return categoriaExists;
     }

@@ -1,6 +1,7 @@
 package br.com.tads.manutencaoequipamentoapi.entities.entity;
 
 public enum Role {
+    CATEGORIA("CATEGORIA"),
     CLIENT("CLIENTE"),
     FUNCIOARIO("FUNCIOARIO");
     
