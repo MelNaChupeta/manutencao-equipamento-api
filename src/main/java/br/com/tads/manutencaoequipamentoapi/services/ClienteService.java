@@ -4,10 +4,9 @@ import java.security.SecureRandom;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
@@ -40,17 +39,6 @@ public class ClienteService {
     }
 
     public void validaDadosCliente(Cliente cliente) throws ValidationException {
-        if(cliente.getCpf() == null || cliente.getCpf().isEmpty()) {
-            throw new ValidationException("O Cpf é obrigatório");
-        }
-        
-        if(cliente.getEmail() == null || cliente.getEmail().isEmpty()) {
-            throw new ValidationException("O Email é obrigatório");
-        }
-        
-        if(cliente.getNome() == null || cliente.getNome().isEmpty()) {
-            throw new ValidationException("O Nome é obrigatório");
-        }
 
         Optional<User> email = userRepository.findByEmail(cliente.getEmail());
         if(email.isPresent()) {

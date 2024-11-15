@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.relational.core.mapping.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,5 +39,6 @@ public class Movimentacao {
 
     @ManyToOne
     @JoinColumn(name="solicitacao_id")
+    @JsonBackReference
     private Solicitacao solicitacao;
 }

@@ -1,20 +1,10 @@
 package br.com.tads.manutencaoequipamentoapi.entities.entity;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.relational.core.mapping.Table;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,7 +24,7 @@ public class Cliente extends User{
     private String endereco;
     private String cidade;
     private String estado;
-    private Long numero;
+    private int numero;
     @Column(name="CEP" , length = 8)
     private String cep;
 

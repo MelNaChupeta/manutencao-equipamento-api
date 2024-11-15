@@ -10,6 +10,7 @@ import org.springframework.data.mapping.MappingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -17,19 +18,22 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Response> handleUserNotFoundException(UserNotFoundException ex) {
+   
+
+	@ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleUserNotFoundException(EntityNotFoundException ex , WebRequest request) {
 		return new ResponseEntity<>(new Response(false,ex.getMessage()), HttpStatus.NOT_FOUND);
 
     }
     
 	@ExceptionHandler(MessagingException.class)
-    public ResponseEntity<Response> handleMessagingException(MessagingException ex) {
+    public ResponseEntity<?> handleMessagingException(MessagingException ex , WebRequest request) {
 		return new ResponseEntity<>(new Response(false,"Ocorreu um erro ao enviar email de cadastro"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

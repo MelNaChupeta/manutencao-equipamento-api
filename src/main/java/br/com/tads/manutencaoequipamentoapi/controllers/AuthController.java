@@ -11,29 +11,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.LoginDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.user.LoginDTO;
 import br.com.tads.manutencaoequipamentoapi.services.AuthenticationService;
-import br.com.tads.manutencaoequipamentoapi.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private AuthenticationService authenticationService;
 
 
 	@PostMapping
-	public ResponseEntity<Object> generateToken(@RequestBody LoginDTO user) throws JsonProcessingException {
+	public ResponseEntity<Response> generateToken(@Valid @RequestBody LoginDTO user) throws JsonProcessingException {
 		return authenticationService.generateToken(user);
 	}
 

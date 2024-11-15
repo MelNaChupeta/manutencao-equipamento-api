@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.annotations.Collate;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,6 +52,7 @@ public class User implements UserDetails{
     private Role role;
     private LocalDateTime ultimoLogin;
     private LocalDateTime dtHrCriacao;
+    @UpdateTimestamp
     private LocalDateTime dtHrAlteracao;
     
     public User(String email , String nome) {
@@ -78,7 +79,6 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //  Auto-generated method stub
         List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(this.role.getDescricao()));
 		return authorities;

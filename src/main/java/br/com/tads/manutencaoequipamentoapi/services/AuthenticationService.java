@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.LoginDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.user.LoginDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
-import br.com.tads.manutencaoequipamentoapi.exceptions.UserNotFoundException;
 
 @Service
 public class AuthenticationService {
@@ -23,21 +22,14 @@ public class AuthenticationService {
 	@Autowired
 	private TokenService tokenService;
 
-	public ResponseEntity<Object> generateToken(LoginDTO user) throws JsonProcessingException {
-		try {
-			String token = tokenService.generateToken(user, false);
-			if (token == null) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(false, "Credenciais inválidas"));
-			} else if (token.equals("BLOQUEADO")) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Response(false, "Usuário bloqueado"));
-			}
-			return ResponseEntity.ok().body(new Response(true, token));
-		}catch(UserNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(false, e.getMessage()));
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response(false, e.getMessage()));
+	public ResponseEntity<Response> generateToken(LoginDTO user) throws JsonProcessingException {
+		String token = tokenService.generateToken(user, false);
+		if (token == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(false, "Credenciais inválidas"));
+		} else if (token.equals("BLOQUEADO")) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Response(false, "Usuário bloqueado"));
 		}
-
+		return ResponseEntity.ok().body(new Response(true, token));
 	}
 
 	public ResponseEntity<Response> validateToken() {

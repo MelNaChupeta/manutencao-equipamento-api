@@ -3,13 +3,15 @@ package br.com.tads.manutencaoequipamentoapi.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.SolicitacaoDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.EstadoSolicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
@@ -33,14 +35,15 @@ public class SolicitacaoService {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
-
-    public Response registrar(SolicitacaoDTO dto) {
+    
+    @Transactional(rollbackOn = Exception.class)
+    public SolicitacaoDTO registrar(SolicitacaoFormDTO dto) {
         Cliente cliente = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Solicitacao solicitacao = new Solicitacao(dto);
         solicitacao.setClient(cliente);
         solicitacao.setEstadoAtual(EstadoSolicitacao.ABERTA);
         salvarMovimentacao(solicitacao);
-        return new Response(true, "Solicitação salva com sucesso");
+        return new SolicitacaoDTO(solicitacao);
     }
 
     public Response visualizar(Long id) {
@@ -49,55 +52,69 @@ public class SolicitacaoService {
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação")));
     }
 
-    public Response visualizar() {
+    public List<SolicitacaoDTO> visualizar() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Solicitacao> solicitacoes = new ArrayList<Solicitacao>();
+        List<SolicitacaoDTO> solicitacoes = new ArrayList<SolicitacaoDTO>();
         if (user.getRole().equals(Role.CLIENT)) {
-            solicitacoes = solicitacaoRepository.findByClient_id(user.getId());
+            solicitacoes = solicitacaoRepository.findByClient_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
         } else if (user.getRole().equals(Role.FUNCIONARIO)) {
-            solicitacoes = solicitacaoRepository.findByFuncionario_id(user.getId());
+            solicitacoes = solicitacaoRepository.findByFuncionario_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
         }
-
-        return new Response(true, solicitacoes);
+        return solicitacoes;
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response aprovar(SolicitacaoDTO dto) {
+    public SolicitacaoDTO aprovar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         solicitacao.setEstadoAtual(EstadoSolicitacao.APROVADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new Response(true, "Solicitação aprovada com sucesso");
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response rejeitar(SolicitacaoDTO dto) {
+    public SolicitacaoDTO rejeitar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         solicitacao.setEstadoAtual(EstadoSolicitacao.REJEITADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new Response(true, "Solicitação rejeitada com sucesso");
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response resgatar(SolicitacaoDTO solicitacaoDTO) {
-        return new Response();
+    public SolicitacaoDTO resgatar(SolicitacaoFormDTO dto) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        solicitacao.setEstadoAtual(EstadoSolicitacao.FINALIZADA);
+        solicitacaoRepository.save(solicitacao);
+        salvarMovimentacao(solicitacao);
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response pagar(SolicitacaoDTO solicitacaoDTO) {
-        return new Response();
+    public SolicitacaoDTO pagar(SolicitacaoFormDTO dto) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        solicitacao.setEstadoAtual(EstadoSolicitacao.PAGA);
+        solicitacaoRepository.save(solicitacao);
+        salvarMovimentacao(solicitacao);
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response efetuarOrcamento(SolicitacaoDTO solicitacaoDTO) {
-        return new Response();
+    public SolicitacaoDTO efetuarOrcamento(SolicitacaoFormDTO dto) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        solicitacao.setEstadoAtual(EstadoSolicitacao.ORCADA);
+        solicitacaoRepository.save(solicitacao);
+        salvarMovimentacao(solicitacao);
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response redirecionar(SolicitacaoDTO dto) {
+    public SolicitacaoDTO redirecionar(SolicitacaoFormDTO dto) {
         funcionarioRepository.findById(dto.idFuncionario())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar funcionario"));
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
@@ -106,17 +123,17 @@ public class SolicitacaoService {
         solicitacao.setFuncionario(new Funcionario(dto.idFuncionario()));
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new Response(true, "Solicitação redirecionada com sucesso");
+        return new SolicitacaoDTO(solicitacao);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Response finalizar(SolicitacaoDTO dto) {
+    public SolicitacaoDTO finalizar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         solicitacao.setEstadoAtual(EstadoSolicitacao.FINALIZADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new Response(true, "Solicitação finalizada com sucesso");
+        return new SolicitacaoDTO(solicitacao);
     }
 
     public void salvarMovimentacao(Solicitacao solicitacao) {

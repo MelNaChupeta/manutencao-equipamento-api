@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.relational.core.mapping.Table;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.CategoriaDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

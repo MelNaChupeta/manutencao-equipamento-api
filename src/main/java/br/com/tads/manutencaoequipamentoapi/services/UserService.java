@@ -7,8 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
-import br.com.tads.manutencaoequipamentoapi.exceptions.UserNotFoundException;
 import br.com.tads.manutencaoequipamentoapi.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -16,11 +16,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public User findById (Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Erro ao buscar usuário"));
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Erro ao buscar usuário"));
     }
     
     public User findByEmail (String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("usuário não encontrado : " + email));
+        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("usuário não encontrado : " + email));
     }
 
    /* public int getUltimoAcesso(User user) {

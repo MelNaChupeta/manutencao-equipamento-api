@@ -13,8 +13,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.LoginDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.UserDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.user.LoginDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.user.UserDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

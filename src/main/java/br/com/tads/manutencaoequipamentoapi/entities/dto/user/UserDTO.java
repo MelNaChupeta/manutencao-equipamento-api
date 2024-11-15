@@ -1,4 +1,4 @@
-package br.com.tads.manutencaoequipamentoapi.entities.dto;
+package br.com.tads.manutencaoequipamentoapi.entities.dto.user;
 
 
 

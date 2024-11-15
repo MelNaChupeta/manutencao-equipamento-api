@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.FuncionarioDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
 import br.com.tads.manutencaoequipamentoapi.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.mail.MessagingException;
 import jakarta.websocket.server.PathParam;
 
 @RestController
@@ -33,7 +33,7 @@ public class FuncionarioController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -42,8 +42,8 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Response> register(@RequestBody FuncionarioDTO funcionarioDTO) throws MessagingException {
-		return ResponseEntity.ok().body(new Response(true,service.save(funcionarioDTO)));
+	public ResponseEntity<FuncionarioDTO> register(@RequestBody FuncionarioFormDTO funcionarioDTO)  {
+		return ResponseEntity.ok().body(new FuncionarioDTO(service.save(funcionarioDTO)));
 	}
 	
     @PutMapping("/alterar/{id}")
@@ -51,7 +51,7 @@ public class FuncionarioController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -60,16 +60,16 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Response> alterar(@RequestBody FuncionarioDTO funcionarioDTO , @PathParam("id") Long id) throws MessagingException {
-		return ResponseEntity.ok().body(new Response(true,service.update(funcionarioDTO,id)));
+	public ResponseEntity<FuncionarioDTO> alterar(@RequestBody FuncionarioFormDTO funcionarioDTO , @PathParam("id") Long id) {
+		return ResponseEntity.ok().body(new FuncionarioDTO(service.update(funcionarioDTO,id)));
 	}
    
     @DeleteMapping("/deletar/{id}")
-	@Operation(summary = "Alterar funcionario")
+	@Operation(summary = "Deletar funcionario")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -78,8 +78,8 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Response> deletar(@PathParam("id") Long id) throws MessagingException {
-		return ResponseEntity.ok().body(new Response(true,service.delete(id)));
+	public ResponseEntity<Boolean> deletar(@PathParam("id") Long id) {
+		return ResponseEntity.ok().body(service.delete(id));
 	}
     
     @GetMapping("/buscar/{id}")
@@ -87,7 +87,7 @@ public class FuncionarioController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -96,8 +96,8 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Response> buscar(@PathParam("id") Long id) throws MessagingException {
-		return ResponseEntity.ok().body(new Response(true,service.findById(id)));
+	public ResponseEntity<FuncionarioDTO> buscar(@PathParam("id") Long id){
+		return ResponseEntity.ok().body(new FuncionarioDTO(service.findById(id)));
 	}
     
     @GetMapping("/buscar")
@@ -114,7 +114,7 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Response> buscar() throws MessagingException {
+	public ResponseEntity<Response> buscar() {
 		return ResponseEntity.ok().body(new Response(true,service.findAll()));
 	}
 }

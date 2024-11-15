@@ -1,14 +1,17 @@
 package br.com.tads.manutencaoequipamentoapi.entities.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.SolicitacaoDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -41,9 +44,14 @@ public class Solicitacao {
     @JoinColumn(name="funcionario_id")
     private Funcionario funcionario;
 
+    @Column(name="descricao_equipamento" , length=30)
     private String descricaoEquipamento; 
+    
     private LocalDateTime dtHrCriacao;
     private String descricaoProblema;
+    private String descricaoRejeicao;
+    private String descricaoManutencao;
+    private BigDecimal valorOrcamento;
    
     @Enumerated(EnumType.STRING)
     private EstadoSolicitacao estadoAtual;
@@ -53,6 +61,7 @@ public class Solicitacao {
     private Categoria categoria; 
    
     @OneToMany(mappedBy = "solicitacao" , cascade = {CascadeType.MERGE , CascadeType.PERSIST})
+    @JsonManagedReference
     private List<Movimentacao> historicoMovimentacao = new ArrayList<Movimentacao>();
 
     @PrePersist
@@ -60,7 +69,7 @@ public class Solicitacao {
         this.dtHrCriacao = LocalDateTime.now();
     }
 
-    public Solicitacao(SolicitacaoDTO dto) {
+    public Solicitacao(SolicitacaoFormDTO dto) {
         this.descricaoEquipamento = dto.descricaoEquipamento();
         this.descricaoProblema = dto.descricaoProblema();
         this.categoria = new Categoria(dto.idCategoria());
