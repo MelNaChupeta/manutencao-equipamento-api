@@ -12,20 +12,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.NoResultException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Response> handleUserNotFoundException(UserNotFoundException ex) {
+		return new ResponseEntity<>(new Response(false,ex.getMessage()), HttpStatus.NOT_FOUND);
+
     }
+    
+	@ExceptionHandler(MessagingException.class)
+    public ResponseEntity<Response> handleMessagingException(MessagingException ex) {
+		return new ResponseEntity<>(new Response(false,"Ocorreu um erro ao enviar email de cadastro"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+	public ResponseEntity<?> handleValidationException(ValidationException ex, WebRequest request) {
+		return new ResponseEntity<>(new Response(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+	}
 
     @ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<?> handleDataIntegrityViolationException(RuntimeException ex, WebRequest request) {
@@ -35,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			return new ResponseEntity<>(new Response(false, "EMAIL já existe na base de dados!"),
 					HttpStatus.BAD_REQUEST);
 		} else {
-			return new ResponseEntity<>(new Response(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new Response(false, "Erro interno no servidor. Contate o administrador do sistema."), HttpStatus.BAD_REQUEST);
 		}
 	}
 

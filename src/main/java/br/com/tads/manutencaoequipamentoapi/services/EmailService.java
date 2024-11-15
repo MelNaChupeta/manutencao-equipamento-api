@@ -37,7 +37,7 @@ public class EmailService {
     
             mailSender.send(message);
         }catch(Exception e) {
-            throw e;
+            throw new MessagingException("Erro ao enviar email de cadastro");
         }
        
     }

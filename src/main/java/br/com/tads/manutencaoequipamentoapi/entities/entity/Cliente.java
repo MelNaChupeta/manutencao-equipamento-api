@@ -39,7 +39,7 @@ public class Cliente extends User{
     private String cep;
 
     public Cliente(ClienteDTO clienteDTO) {
-        super(clienteDTO.nome() , clienteDTO.email());
+        super(clienteDTO.email(),clienteDTO.nome() );
         this.cpf = clienteDTO.cpf();
         this.cep = clienteDTO.cep();
         this.numero = clienteDTO.numero();

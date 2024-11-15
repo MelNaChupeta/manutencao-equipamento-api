@@ -86,7 +86,6 @@ public class TokenService {
 		Date dateExpiration = new Date(today.getTime() + Long.parseLong(expiration));
 		String token = null;
 
-		// if (userService.validateUser(user, status)) {
 		User user = userService.findByEmail(loginDTO.email());
 
 		String senha = userService.findById(user.getId()).getPassword();
@@ -103,7 +102,7 @@ public class TokenService {
 					.setSubject(mapper.writeValueAsString(subject))
 					.claim("id", subject.id())
 					.claim("email", subject.email())
-					.claim("name", subject.name())
+					.claim("nome", subject.nome())
 					.claim("role", subject.role())
 					.setIssuedAt(today)
 					.setExpiration(dateExpiration)

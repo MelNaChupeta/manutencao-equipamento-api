@@ -18,7 +18,6 @@ public class FuncionarioService {
     @Autowired
     private FuncionarioRepository repository;
 
-
     @Transactional(rollbackOn = Exception.class)
     public Funcionario save(FuncionarioDTO funcionarioDTO) throws MessagingException{
         Funcionario funcionario = new Funcionario(funcionarioDTO);
