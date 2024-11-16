@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -22,6 +24,7 @@ import br.com.tads.manutencaoequipamentoapi.services.TokenService;
 
 @EnableWebSecurity
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfigurations {
 
     @Autowired
@@ -48,6 +51,7 @@ public class SecurityConfigurations {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/cliente/registrar/**").permitAll()
                 .requestMatchers("/funcionario/**").hasRole("FUNCIONARIO")
+                .requestMatchers("/categoria/**").hasRole("FUNCIONARIO")
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf.disable())

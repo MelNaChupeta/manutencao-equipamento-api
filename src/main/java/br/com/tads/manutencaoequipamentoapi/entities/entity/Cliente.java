@@ -2,7 +2,7 @@ package br.com.tads.manutencaoequipamentoapi.entities.entity;
 
 import org.springframework.data.relational.core.mapping.Table;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteFormDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -28,13 +28,14 @@ public class Cliente extends User{
     @Column(name="CEP" , length = 8)
     private String cep;
 
-    public Cliente(ClienteDTO clienteDTO) {
+    public Cliente(ClienteFormDTO clienteDTO) {
         super(clienteDTO.email(),clienteDTO.nome() );
         this.cpf = clienteDTO.cpf();
         this.cep = clienteDTO.cep();
         this.numero = clienteDTO.numero();
         this.endereco = clienteDTO.endereco();
-        this.cidade = clienteDTO.estado();
+        this.cidade = clienteDTO.cidade();
+        this.estado = clienteDTO.estado();
     }
 
    

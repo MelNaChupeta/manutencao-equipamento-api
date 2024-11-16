@@ -1,5 +1,7 @@
 package br.com.tads.manutencaoequipamentoapi.entities.entity;
 
+import java.time.LocalDate;
+
 import org.springframework.data.relational.core.mapping.Table;
 
 import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
@@ -29,8 +31,11 @@ public class Funcionario extends User{
     @JoinColumn(name = "id")
     private User user;
 
+    private LocalDate dtNascimento;
+
     public Funcionario(FuncionarioFormDTO funcionarioDTO) {
-        super(funcionarioDTO.nome() , funcionarioDTO.email() , funcionarioDTO.senha());
+        super(funcionarioDTO.email() ,funcionarioDTO.nome() ,funcionarioDTO.senha());
+        this.dtNascimento = funcionarioDTO.dtNascimento();
     }
 
     public Funcionario(Long id) {

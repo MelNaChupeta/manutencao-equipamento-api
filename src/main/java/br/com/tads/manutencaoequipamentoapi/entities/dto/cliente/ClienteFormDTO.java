@@ -1,11 +1,10 @@
 package br.com.tads.manutencaoequipamentoapi.entities.dto.cliente;
 
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 
-public record ClienteDTO(Long id , 
+public record ClienteFormDTO(Long id , 
                         @NotBlank(message = "o nome precisa ser preenchido") 
                         String nome , 
                         @NotBlank(message = "o email precisa ser preenchido") 
@@ -18,18 +17,4 @@ public record ClienteDTO(Long id ,
                         String estado , 
                         int numero , 
                         Role role) {
-    public ClienteDTO(Cliente cliente){
-        this(
-            cliente.getId(),
-            cliente.getNome(),
-            cliente.getEmail(),
-            cliente.getCpf(),
-            cliente.getCep(),
-            cliente.getEndereco(),
-            cliente.getCidade(),
-            cliente.getEstado(),
-            cliente.getNumero(),
-            cliente.getRole()
-        );
-    }
 }

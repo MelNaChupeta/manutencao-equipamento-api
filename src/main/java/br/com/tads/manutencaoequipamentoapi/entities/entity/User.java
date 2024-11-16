@@ -36,16 +36,16 @@ import jakarta.persistence.PreUpdate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"password"})
+@JsonIgnoreProperties({"senha"})
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="EMAIL" , length=64 , unique=true)
+    @Column(name="EMAIL" , length=64 , unique=true , nullable = false)
     private String email;
-    @Column(name="SENHA")
+    @Column(name="SENHA" , nullable = false)
     private String senha;
-    @Column(name="NOME" , length=100)
+    @Column(name="NOME" , length=100 , nullable = false)
     private String nome;
     private boolean status;
     @Enumerated(EnumType.STRING)
@@ -55,6 +55,10 @@ public class User implements UserDetails{
     @UpdateTimestamp
     private LocalDateTime dtHrAlteracao;
     
+    public User(Long id) {
+        this.id = id;
+    }
+
     public User(String email , String nome) {
         this.nome = nome;
         this.email = email;
@@ -70,6 +74,7 @@ public class User implements UserDetails{
     private void onPrePersist(){
         this.senha = new BCryptPasswordEncoder().encode(senha);
         this.dtHrCriacao = LocalDateTime.now();
+        this.status = true;
     }
     
     @PreUpdate
@@ -80,7 +85,7 @@ public class User implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(this.role.getDescricao()));
+		authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.getDescricao()));
 		return authorities;
     }
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
@@ -27,7 +28,7 @@ public class ClienteService {
     private EmailService emailService;
     
     @Transactional(rollbackOn = Exception.class)
-    public ClienteDTO save(ClienteDTO clienteDTO) throws Exception{
+    public ClienteDTO save(ClienteFormDTO clienteDTO) throws Exception{
         Cliente cliente = new Cliente(clienteDTO);
         validaDadosCliente(cliente);
         cliente.setRole(Role.CLIENT);
@@ -44,7 +45,7 @@ public class ClienteService {
         if(email.isPresent()) {
             throw new ValidationException("o Email já consta na base de dados");
         }
-        Optional<Cliente> cpf = clienteRepository.findByCpf(cliente.getEmail());
+        Optional<Cliente> cpf = clienteRepository.findByCpf(cliente.getCpf());
         if(cpf.isPresent()){
             throw new ValidationException("o Cpf já consta na base de dados");
         }

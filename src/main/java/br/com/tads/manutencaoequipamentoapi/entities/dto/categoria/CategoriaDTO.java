@@ -1,7 +1,18 @@
 package br.com.tads.manutencaoequipamentoapi.entities.dto.categoria;
 
-import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
-public record CategoriaDTO(Long id , @NotBlank(message =  "o nome da categoria precisa estar preenchido") String nome) {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
+
+public record CategoriaDTO(Long id , String descricao , String userAlteracao , @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")  LocalDateTime dtHrAlteracao) {
+    public CategoriaDTO(Categoria categoria) {
+        this(
+            categoria.getId(),
+            categoria.getDescricao(),
+            categoria.getUser().getNome(),
+            categoria.getDtHrAlteracao()
+        );
+    }
 }

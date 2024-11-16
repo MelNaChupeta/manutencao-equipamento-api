@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
 import br.com.tads.manutencaoequipamentoapi.services.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +25,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/categoria")
@@ -46,8 +47,8 @@ public class CategoriaController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Categoria> register(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-		return ResponseEntity.ok().body(service.save(categoriaDTO));
+	public ResponseEntity<CategoriaDTO> register(@Valid @RequestBody CategoriaFormDTO categoriaDTO) {
+		return ResponseEntity.ok().body(new CategoriaDTO(service.save(categoriaDTO)));
 	}
 
 	@PutMapping("/alterar/{id}")
@@ -64,8 +65,8 @@ public class CategoriaController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Categoria> alterar(@Valid @RequestBody CategoriaDTO categoriaDTO , @PathParam("id") Long id)  {
-		return ResponseEntity.ok().body(service.update(categoriaDTO,id));
+	public ResponseEntity<CategoriaDTO> alterar(@Valid @RequestBody CategoriaFormDTO categoriaDTO , @PathVariable("id") Long id)  {
+		return ResponseEntity.ok().body(new CategoriaDTO(service.update(categoriaDTO,id)));
 	}
 
 	@DeleteMapping("/deletar/{id}")
@@ -82,11 +83,11 @@ public class CategoriaController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Boolean> deletar(@Valid @PathParam("id") Long id) {
+	public ResponseEntity<Boolean> deletar(@PathVariable("id") Long id) {
 		return ResponseEntity.ok().body(service.delete(id));
 	}
 
-	@GetMapping("/buscar/{id}")
+	@GetMapping("/{id}")
 	@Operation(summary = "Buscar categoria")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
@@ -100,11 +101,11 @@ public class CategoriaController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Categoria> buscar(@Valid @PathParam("id") Long id) {
-		return ResponseEntity.ok().body(service.findById(id));
+	public ResponseEntity<CategoriaDTO> buscar(@PathVariable("id") Long id) {
+		return ResponseEntity.ok().body(new CategoriaDTO(service.findById(id)));
 	}
 
-	@GetMapping("/buscar")
+	@GetMapping
 	@Operation(summary = "Buscar categoria")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
@@ -118,7 +119,7 @@ public class CategoriaController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<List<Categoria>> buscar()  {
+	public ResponseEntity<List<CategoriaDTO>> buscar()  {
 		return ResponseEntity.ok().body(service.findAll());
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.EstadoSolicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
@@ -37,13 +38,18 @@ public class SolicitacaoService {
     private FuncionarioRepository funcionarioRepository;
     
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO registrar(SolicitacaoFormDTO dto) {
+    public Solicitacao registrar(SolicitacaoFormDTO dto) {
         Cliente cliente = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Solicitacao solicitacao = new Solicitacao(dto);
-        solicitacao.setClient(cliente);
+        Solicitacao solicitacao = Solicitacao.builder()
+                                  .categoria(new Categoria(dto.idCategoria()))
+                                  .client(cliente)
+                                  .descricaoEquipamento(dto.descricaoEquipamento())
+                                  .descricaoProblema(dto.descricaoEquipamento())
+                                  .build();
         solicitacao.setEstadoAtual(EstadoSolicitacao.ABERTA);
+        solicitacao = solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
+        return solicitacao;
     }
 
     public Response visualizar(Long id) {

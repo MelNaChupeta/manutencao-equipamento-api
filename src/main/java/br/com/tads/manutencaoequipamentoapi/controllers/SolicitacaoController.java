@@ -2,6 +2,7 @@ package br.com.tads.manutencaoequipamentoapi.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
 import br.com.tads.manutencaoequipamentoapi.services.SolicitacaoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,9 +44,9 @@ public class SolicitacaoController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-    @PreAuthorize("hasRole('ROLE_CLIENTE')")                
-	public ResponseEntity<Response> register(@RequestBody FuncionarioFormDTO funcionarioDTO)  {
-		return ResponseEntity.ok().body(new Response(true,"ok"));
+	@PreAuthorize("hasRole('CLIENTE')")                
+	public ResponseEntity<SolicitacaoDTO> register(@RequestBody SolicitacaoFormDTO dto)  {
+		return ResponseEntity.ok().body(new SolicitacaoDTO(service.registrar(dto)));
 	}
 
     @GetMapping("/{id}")
@@ -83,6 +85,4 @@ public class SolicitacaoController {
 	public ResponseEntity<Response> aprovar(@RequestBody SolicitacaoFormDTO solicitacaoDTO)  {
 		return ResponseEntity.ok().body(new Response(true,"ok"));
 	}
-
-   
 }
