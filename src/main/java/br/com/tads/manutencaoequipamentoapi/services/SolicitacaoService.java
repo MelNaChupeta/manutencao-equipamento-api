@@ -20,6 +20,7 @@ import br.com.tads.manutencaoequipamentoapi.entities.entity.Movimentacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.repositories.FuncionarioRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.MovimentacaoRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.SolicitacaoRepository;
@@ -68,11 +69,43 @@ public class SolicitacaoService {
         }
         return solicitacoes;
     }
+    
+    public List<SolicitacaoDTO> visualizar(boolean todas,boolean hoje,LocalDate dataAbertura) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<SolicitacaoDTO> solicitacoes = new ArrayList<SolicitacaoDTO>();
+        if (user.getRole().equals(Role.CLIENT)) {
+            solicitacoes = solicitacaoRepository.findByClient_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
+        } else if (user.getRole().equals(Role.FUNCIONARIO)) {
+            solicitacoes = solicitacaoRepository.findByFuncionario_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
+        }
+        return solicitacoes;
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public SolicitacaoDTO efetuarOrcamento(SolicitacaoFormDTO dto) {
+        if(dto.valorOrcamento() == null && !(dto.valorOrcamento() > 0))
+                throw new ValidationException("este valor de orçamento é inválido");
+        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ABERTA))
+                throw new ValidationException("o orçamento já foi realizado");
+
+        solicitacao.setEstadoAtual(EstadoSolicitacao.ORCADA);
+        solicitacao.setValorOrcamento(dto.valorOrcamento());
+        solicitacaoRepository.save(solicitacao);
+        salvarMovimentacao(solicitacao);
+        return new SolicitacaoDTO(solicitacao);
+    }
 
     @Transactional(rollbackOn = Exception.class)
     public SolicitacaoDTO aprovar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ORCADA))
+                throw new ValidationException("o orçamento já foi analisado");
+
         solicitacao.setEstadoAtual(EstadoSolicitacao.APROVADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
@@ -81,9 +114,37 @@ public class SolicitacaoService {
 
     @Transactional(rollbackOn = Exception.class)
     public SolicitacaoDTO rejeitar(SolicitacaoFormDTO dto) {
+        if(dto.descricaoRejeicao().isEmpty())
+            throw new ValidationException("a descrição da rejeicao é obrigatória");
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ORCADA))
+                throw new ValidationException("o orçamento já foi analisado");
+
         solicitacao.setEstadoAtual(EstadoSolicitacao.REJEITADA);
+        solicitacao.setDescricaoRejeicao(dto.descricaoRejeicao());
+        solicitacaoRepository.save(solicitacao);
+        salvarMovimentacao(solicitacao);
+        return new SolicitacaoDTO(solicitacao);
+    }
+    
+    @Transactional(rollbackOn = Exception.class)
+    public SolicitacaoDTO efetuarManutencao(SolicitacaoFormDTO dto) {
+        if(dto.descricaoManutencao().isEmpty())
+            throw new ValidationException("a descrição da manutencao é obrigatória");
+        if(dto.orientacoesCliente().isEmpty())
+            throw new ValidationException("a orientação para o cliente é obrigatória");
+        
+        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.APROVADA))
+                throw new ValidationException("o orçamento ainda não foi aprovado");
+
+        solicitacao.setEstadoAtual(EstadoSolicitacao.ARRUMADA);
+        solicitacao.setDescricaoManutencao(dto.descricaoManutencao());
+        solicitacao.setOrientacoesCliente(dto.orientacoesCliente());
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
         return new SolicitacaoDTO(solicitacao);
@@ -93,7 +154,11 @@ public class SolicitacaoService {
     public SolicitacaoDTO resgatar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
-        solicitacao.setEstadoAtual(EstadoSolicitacao.FINALIZADA);
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.REJEITADA))
+                throw new ValidationException("o equipamento já foi resgatado");
+        
+        solicitacao.setEstadoAtual(EstadoSolicitacao.APROVADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
         return new SolicitacaoDTO(solicitacao);
@@ -103,17 +168,11 @@ public class SolicitacaoService {
     public SolicitacaoDTO pagar(SolicitacaoFormDTO dto) {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ARRUMADA))
+            throw new ValidationException("o equipamento ainda não foi arrumado");
+        
         solicitacao.setEstadoAtual(EstadoSolicitacao.PAGA);
-        solicitacaoRepository.save(solicitacao);
-        salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
-    }
-
-    @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO efetuarOrcamento(SolicitacaoFormDTO dto) {
-        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
-                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
-        solicitacao.setEstadoAtual(EstadoSolicitacao.ORCADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
         return new SolicitacaoDTO(solicitacao);

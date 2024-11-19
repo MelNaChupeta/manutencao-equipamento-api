@@ -49,8 +49,31 @@ public class SolicitacaoController {
 		return ResponseEntity.ok().body(new SolicitacaoDTO(service.registrar(dto)));
 	}
 
+    @GetMapping
+	@Operation(summary = "Buscar uma solicitação")
+	@SecurityRequirement(name = "bearerAuth")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
+			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
+			@ApiResponse(responseCode = "500", description = "Erro Interno do Servidor", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
+			@ApiResponse(responseCode = "504", description = "Timeout", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
+	public ResponseEntity<Response> visualizar(
+		@Parameter(required = false, description = "Data da Abertutea da solicitação", example = "01/01/2024") @JsonFormat(pattern = "dd/MM/yyyy") @RequestParam(required = false) LocalDate dataAbertura,
+		@Parameter(required = false, description = "Solicitações da data atual") @RequestParam(required = false) Boolean hoje,
+		@Parameter(required = false, description = "Solicitações da data atual") @RequestParam(required = false) Boolean todas
+
+	)  {
+		return ResponseEntity.ok().body(new Response(true,"ok"));
+	}
+
     @GetMapping("/{id}")
-	@Operation(summary = "Registrar uma nova solicitação")
+	@Operation(summary = "Buscar uma solicitação")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {

@@ -53,6 +53,7 @@ public class Solicitacao {
     private String descricaoProblema;
     private String descricaoRejeicao;
     private String descricaoManutencao;
+    private String orientacoesCliente;
     private BigDecimal valorOrcamento;
    
     @Enumerated(EnumType.STRING)
