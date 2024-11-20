@@ -38,7 +38,7 @@ public class CategoriaController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -56,7 +56,7 @@ public class CategoriaController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -74,7 +74,7 @@ public class CategoriaController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -92,7 +92,7 @@ public class CategoriaController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Categoria.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {
@@ -110,7 +110,7 @@ public class CategoriaController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriaDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {

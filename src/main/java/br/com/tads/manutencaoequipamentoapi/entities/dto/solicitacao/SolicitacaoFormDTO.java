@@ -1,5 +1,6 @@
 package br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao;
 
+import java.math.BigDecimal;
 
 public record SolicitacaoFormDTO(Long id,
                                  Long idCategoria,
@@ -8,7 +9,7 @@ public record SolicitacaoFormDTO(Long id,
                                  String descricaoProblema ,
                                  String descricaoRejeicao ,
                                  String descricaoManutencao,
-                                 String orientacoesCliente;
+                                 String orientacoesCliente,
                                  BigDecimal valorOrcamento) {
    
 }

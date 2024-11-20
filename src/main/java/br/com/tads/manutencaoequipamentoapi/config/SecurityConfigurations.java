@@ -66,10 +66,7 @@ public class SecurityConfigurations {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**", "/webjars/**");
-    }
+   
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

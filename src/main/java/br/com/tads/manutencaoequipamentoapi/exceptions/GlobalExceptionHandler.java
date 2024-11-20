@@ -1,6 +1,8 @@
 package br.com.tads.manutencaoequipamentoapi.exceptions;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.TransientPropertyValueException;
 import org.hibernate.id.IdentifierGenerationException;

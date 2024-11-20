@@ -1,15 +1,20 @@
 package br.com.tads.manutencaoequipamentoapi.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RejeitarDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
@@ -20,6 +25,7 @@ import br.com.tads.manutencaoequipamentoapi.entities.entity.Movimentacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.entities.specification.SolicitacaoSpecification;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.repositories.FuncionarioRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.MovimentacaoRepository;
@@ -45,7 +51,7 @@ public class SolicitacaoService {
                                   .categoria(new Categoria(dto.idCategoria()))
                                   .client(cliente)
                                   .descricaoEquipamento(dto.descricaoEquipamento())
-                                  .descricaoProblema(dto.descricaoEquipamento())
+                                  .descricaoProblema(dto.descricaoProblema())
                                   .build();
         solicitacao.setEstadoAtual(EstadoSolicitacao.ABERTA);
         solicitacao = solicitacaoRepository.save(solicitacao);
@@ -62,7 +68,7 @@ public class SolicitacaoService {
     public List<SolicitacaoDTO> visualizar() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<SolicitacaoDTO> solicitacoes = new ArrayList<SolicitacaoDTO>();
-        if (user.getRole().equals(Role.CLIENT)) {
+        if (user.getRole().equals(Role.CLIENTE)) {
             solicitacoes = solicitacaoRepository.findByClient_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
         } else if (user.getRole().equals(Role.FUNCIONARIO)) {
             solicitacoes = solicitacaoRepository.findByFuncionario_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
@@ -70,20 +76,31 @@ public class SolicitacaoService {
         return solicitacoes;
     }
     
-    public List<SolicitacaoDTO> visualizar(boolean todas,boolean hoje,LocalDate dataAbertura) {
+    @Transactional
+    public List<SolicitacaoDTO> visualizar(boolean todas, boolean hoje, LocalDate dataAbertura) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<SolicitacaoDTO> solicitacoes = new ArrayList<SolicitacaoDTO>();
-        if (user.getRole().equals(Role.CLIENT)) {
-            solicitacoes = solicitacaoRepository.findByClient_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
+        
+        Long clientId = null;
+        Long funcionarioId = null;
+
+        if (user.getRole().equals(Role.CLIENTE)) {
+            clientId = user.getId();
         } else if (user.getRole().equals(Role.FUNCIONARIO)) {
-            solicitacoes = solicitacaoRepository.findByFuncionario_id(user.getId()).stream().map(s -> new SolicitacaoDTO(s)).collect(Collectors.toList());
+            funcionarioId = user.getId();
         }
-        return solicitacoes;
+
+        Specification<Solicitacao> spec = new SolicitacaoSpecification(clientId, funcionarioId, dataAbertura, hoje, todas);
+
+        List<Solicitacao> solicitacoes = solicitacaoRepository.findAll(spec);
+
+        return solicitacoes.stream().map(SolicitacaoDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO efetuarOrcamento(SolicitacaoFormDTO dto) {
-        if(dto.valorOrcamento() == null && !(dto.valorOrcamento() > 0))
+    public Solicitacao efetuarOrcamento(OrcamentoDTO dto) throws ValidationException {
+        Funcionario user = (Funcionario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(dto.valorOrcamento() == null && !(dto.valorOrcamento().compareTo(new BigDecimal(0)) > 0))
                 throw new ValidationException("este valor de orçamento é inválido");
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
@@ -93,29 +110,30 @@ public class SolicitacaoService {
 
         solicitacao.setEstadoAtual(EstadoSolicitacao.ORCADA);
         solicitacao.setValorOrcamento(dto.valorOrcamento());
+        solicitacao.setFuncionario(user);
+        
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
+        return solicitacao;
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO aprovar(SolicitacaoFormDTO dto) {
-        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+    public Solicitacao aprovar(Long id) throws ValidationException {
+        Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ORCADA))
-                throw new ValidationException("o orçamento já foi analisado");
+                throw new ValidationException("a solicitação já passou da etapa de aprovação");
 
         solicitacao.setEstadoAtual(EstadoSolicitacao.APROVADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
+        return solicitacao;
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO rejeitar(SolicitacaoFormDTO dto) {
-        if(dto.descricaoRejeicao().isEmpty())
-            throw new ValidationException("a descrição da rejeicao é obrigatória");
+    public Solicitacao rejeitar(RejeitarDTO dto) throws ValidationException {
+       
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
@@ -126,11 +144,11 @@ public class SolicitacaoService {
         solicitacao.setDescricaoRejeicao(dto.descricaoRejeicao());
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
+        return solicitacao;
     }
     
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO efetuarManutencao(SolicitacaoFormDTO dto) {
+    public SolicitacaoDTO efetuarManutencao(SolicitacaoFormDTO dto) throws ValidationException {
         if(dto.descricaoManutencao().isEmpty())
             throw new ValidationException("a descrição da manutencao é obrigatória");
         if(dto.orientacoesCliente().isEmpty())
@@ -151,8 +169,8 @@ public class SolicitacaoService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO resgatar(SolicitacaoFormDTO dto) {
-        Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
+    public Solicitacao resgatar(Long id) throws ValidationException {
+        Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.REJEITADA))
@@ -161,11 +179,11 @@ public class SolicitacaoService {
         solicitacao.setEstadoAtual(EstadoSolicitacao.APROVADA);
         solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
-        return new SolicitacaoDTO(solicitacao);
+        return solicitacao;
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public SolicitacaoDTO pagar(SolicitacaoFormDTO dto) {
+    public SolicitacaoDTO pagar(SolicitacaoFormDTO dto) throws ValidationException {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         

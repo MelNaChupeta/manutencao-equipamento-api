@@ -31,7 +31,7 @@ public class ClienteService {
     public ClienteDTO save(ClienteFormDTO clienteDTO) throws Exception{
         Cliente cliente = new Cliente(clienteDTO);
         validaDadosCliente(cliente);
-        cliente.setRole(Role.CLIENT);
+        cliente.setRole(Role.CLIENTE);
         String senha = generateRandomPassword();
         cliente.setSenha(senha);
         cliente = clienteRepository.save(cliente);

@@ -3,12 +3,13 @@ package br.com.tads.manutencaoequipamentoapi.repositories;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 
 @Repository
-public interface SolicitacaoRepository extends JpaRepository<Solicitacao , Long>{
+public interface SolicitacaoRepository extends JpaRepository<Solicitacao , Long> , JpaSpecificationExecutor<Solicitacao>{
 
     List<Solicitacao> findByClient_id(Long id);
 
