@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler  {
 
-     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		return new ResponseEntity<>(new Response(false,ex.getMessage()), HttpStatus.BAD_REQUEST);
     }

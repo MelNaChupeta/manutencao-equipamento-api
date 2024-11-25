@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioEditDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
@@ -36,7 +37,7 @@ public class FuncionarioService {
     }
     
     @Transactional(rollbackOn = Exception.class)
-    public Funcionario update(FuncionarioFormDTO funcionarioDTO , Long id) {
+    public Funcionario update(FuncionarioEditDTO funcionarioDTO , Long id) {
         Funcionario funcionarioExists = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
         funcionarioExists.setDtNascimento(funcionarioDTO.dtNascimento());
         funcionarioExists.setNome(funcionarioDTO.nome());

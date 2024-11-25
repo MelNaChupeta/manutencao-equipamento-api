@@ -38,7 +38,7 @@ public class ClienteController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<ClienteDTO> register(@RequestBody @Valid ClienteFormDTO clienteDTO) throws ValidationException , Exception {
+	public ResponseEntity<ClienteDTO> register(@Valid @RequestBody  ClienteFormDTO clienteDTO) throws ValidationException , Exception {
 		return ResponseEntity.ok().body(service.save(clienteDTO));
 	}
 }

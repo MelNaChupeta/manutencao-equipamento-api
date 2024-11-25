@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.tads.manutencaoequipamentoapi.commom.Util;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteFormDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
@@ -40,7 +41,10 @@ public class ClienteService {
     }
 
     public void validaDadosCliente(Cliente cliente) throws ValidationException {
-
+        if(cliente.getCep() != null)
+            cliente.setCep(Util.onlyNumbers(cliente.getCep()));
+        cliente.setCpf(Util.onlyNumbers(cliente.getCpf()));
+       
         Optional<User> email = userRepository.findByEmail(cliente.getEmail());
         if(email.isPresent()) {
             throw new ValidationException("o Email já consta na base de dados");

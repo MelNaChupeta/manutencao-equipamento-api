@@ -86,7 +86,7 @@ public class TokenService {
         user.setSenha(senha);    
 
         if (user.isStatus()) {
-            UserDTO subject = new UserDTO(user.getId(), user.getEmail(), user.getUsername(), user.getRole().getDescricao());
+            UserDTO subject = new UserDTO(user.getId(), user.getEmail(), user.getNome(), user.getRole().getDescricao());
             Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             ObjectMapper mapper = new ObjectMapper();
             token = Jwts.builder()
