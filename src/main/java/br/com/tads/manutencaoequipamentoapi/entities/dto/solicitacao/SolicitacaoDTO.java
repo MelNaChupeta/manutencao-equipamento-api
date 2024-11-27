@@ -1,16 +1,13 @@
 package br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.EstadoSolicitacao;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 
@@ -19,8 +16,7 @@ public record SolicitacaoDTO (Long id,
                               CategoriaDTO categoria,
                               String funcionario , 
                               Long idFuncionario , 
-                              String cliente,
-                              Long idCliente,
+                              ClienteDTO cliente,
                               String descricaoEquipamento,
                               LocalDateTime dtHrCriacao,
                               String descricaoProblema,
@@ -37,8 +33,7 @@ public record SolicitacaoDTO (Long id,
             ),
             Optional.ofNullable(solicitacao.getFuncionario()).map(Funcionario::getNome).orElse(""), 
             Optional.ofNullable(solicitacao.getFuncionario()).map(Funcionario::getId).orElse(null), 
-            solicitacao.getClient().getNome(),
-            solicitacao.getClient().getId(),
+            new ClienteDTO(solicitacao.getClient()),
             solicitacao.getDescricaoEquipamento(),
             solicitacao.getDtHrCriacao(),
             solicitacao.getDescricaoProblema(),

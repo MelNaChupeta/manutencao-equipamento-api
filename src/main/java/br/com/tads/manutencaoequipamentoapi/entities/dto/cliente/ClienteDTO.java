@@ -17,7 +17,8 @@ public record ClienteDTO(Long id ,
                         String cidade , 
                         String estado , 
                         int numero , 
-                        Role role) {
+                        Role role,
+                        String celular) {
     public ClienteDTO(Cliente cliente){
         this(
             cliente.getId(),
@@ -29,7 +30,8 @@ public record ClienteDTO(Long id ,
             cliente.getCidade(),
             cliente.getEstado(),
             cliente.getNumero(),
-            cliente.getRole()
+            cliente.getRole(),
+            cliente.getCelular()
         );
     }
 }

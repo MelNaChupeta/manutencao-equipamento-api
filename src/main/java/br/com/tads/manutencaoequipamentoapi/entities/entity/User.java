@@ -47,6 +47,8 @@ public class User implements UserDetails{
     private String senha;
     @Column(name="NOME" , length=100 , nullable = false)
     private String nome;
+    @Column(name="CELULAR" , length=100)
+    private String celular;
     private boolean status;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -62,6 +64,12 @@ public class User implements UserDetails{
     public User(String email , String nome) {
         this.nome = nome;
         this.email = email;
+    }
+    
+    public User(String email , String nome , String celular , boolean insert) {
+        this.nome = nome;
+        this.email = email;
+        this.celular = celular;
     }
     
     public User(String email , String nome , String senha) {

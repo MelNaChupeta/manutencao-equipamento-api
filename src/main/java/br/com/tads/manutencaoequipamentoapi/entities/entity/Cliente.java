@@ -29,13 +29,14 @@ public class Cliente extends User{
     private String cep;
 
     public Cliente(ClienteFormDTO clienteDTO) {
-        super(clienteDTO.email(),clienteDTO.nome() );
+        super(clienteDTO.email(),clienteDTO.nome() ,  clienteDTO.celular() , true);
         this.cpf = clienteDTO.cpf();
         this.cep = clienteDTO.cep();
         this.numero = clienteDTO.numero();
         this.endereco = clienteDTO.endereco();
         this.cidade = clienteDTO.cidade();
         this.estado = clienteDTO.estado();
+        
     }
 
    

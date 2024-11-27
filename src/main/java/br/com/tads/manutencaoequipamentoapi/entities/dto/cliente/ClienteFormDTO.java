@@ -14,5 +14,6 @@ public record ClienteFormDTO(
                         String endereco , 
                         String cidade , 
                         String estado , 
-                        int numero) {
+                        int numero,
+                        String celular) {
 }
