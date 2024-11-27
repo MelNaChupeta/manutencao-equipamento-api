@@ -28,8 +28,8 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="descricao" , nullable = false , unique = true , length = 100)
-    private String descricao; 
+    @Column(name="nome" , nullable = false , unique = true , length = 100)
+    private String nome; 
     private boolean status;
     private LocalDateTime dtHrCriacao;
     private LocalDateTime dtHrAlteracao;
@@ -55,10 +55,15 @@ public class Categoria {
     }
 
     public Categoria(CategoriaFormDTO categoriaDTO) {
-        this.descricao = categoriaDTO.descricao();
+        this.nome = categoriaDTO.nome();
     }
 
     public Categoria(Long id){
         this.id  = id;
+    }
+
+    public Categoria(Long id , String nome){
+        this.id  = id;
+        this.nome = nome;
     }
 }

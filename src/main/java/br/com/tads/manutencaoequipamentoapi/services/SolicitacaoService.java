@@ -13,7 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoFormDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RegistrarSolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RejeitarDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
@@ -27,6 +28,7 @@ import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
 import br.com.tads.manutencaoequipamentoapi.entities.specification.SolicitacaoSpecification;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
+import br.com.tads.manutencaoequipamentoapi.repositories.CategoriaRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.FuncionarioRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.MovimentacaoRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.SolicitacaoRepository;
@@ -44,25 +46,30 @@ public class SolicitacaoService {
     @Autowired
     private FuncionarioRepository funcionarioRepository;
     
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+    
     @Transactional(rollbackOn = Exception.class)
-    public Solicitacao registrar(SolicitacaoFormDTO dto) {
+    public Solicitacao registrar(RegistrarSolicitacaoDTO dto) {
         Cliente cliente = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Categoria categoria = categoriaRepository.findById(dto.idCategoria())
+            .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
         Solicitacao solicitacao = Solicitacao.builder()
-                                  .categoria(new Categoria(dto.idCategoria()))
+                                  .categoria(categoria)
                                   .client(cliente)
                                   .descricaoEquipamento(dto.descricaoEquipamento())
                                   .descricaoProblema(dto.descricaoProblema())
                                   .build();
         solicitacao.setEstadoAtual(EstadoSolicitacao.ABERTA);
-        solicitacao = solicitacaoRepository.save(solicitacao);
+        solicitacaoRepository.save(solicitacao);
         salvarMovimentacao(solicitacao);
         return solicitacao;
     }
 
-    public Response visualizar(Long id) {
-        return new Response(true, solicitacaoRepository
+    public Solicitacao visualizar(Long id) {
+        return solicitacaoRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação")));
+                .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
     }
 
     public List<SolicitacaoDTO> visualizar() {
@@ -97,7 +104,7 @@ public class SolicitacaoService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Solicitacao efetuarOrcamento(OrcamentoDTO dto) throws ValidationException {
+    public Solicitacao efetuarOrcamento(OrcamentoFormDTO dto) throws ValidationException {
         Funcionario user = (Funcionario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if(dto.valorOrcamento() == null && !(dto.valorOrcamento().compareTo(new BigDecimal(0)) > 0))

@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoFormDTO;
+import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RegistrarSolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RejeitarDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoFormDTO;
@@ -58,7 +59,7 @@ public class SolicitacaoController {
 	public ResponseEntity<List<SolicitacaoDTO>> visualizar(
 		@Parameter(required = false, description = "Data da Abertutea da solicitação", example = "2024-10-12") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) LocalDate dataAbertura,
 		@Parameter(required = false, description = "Solicitações da data atual") @RequestParam(required = false) boolean hoje,
-		@Parameter(required = false, description = "Solicitações da data atual") @RequestParam(required = false) boolean todas)  {
+		@Parameter(required = false, description = "Todas as solicitações") @RequestParam(required = false) boolean todas)  {
 		return ResponseEntity.ok().body(service.visualizar(todas, hoje, dataAbertura));
 	}
 
@@ -76,8 +77,8 @@ public class SolicitacaoController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }), })
-	public ResponseEntity<Response> visualizar(@PathVariable("id") Long id)  {
-		return ResponseEntity.ok().body(new Response(true,"ok"));
+	public ResponseEntity<SolicitacaoDTO> visualizar(@PathVariable("id") Long id)  {
+		return ResponseEntity.ok().body(new SolicitacaoDTO(service.visualizar(id)));
 	}
 
 	@PostMapping("/registrar")
@@ -95,7 +96,7 @@ public class SolicitacaoController {
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }), })
 	@PreAuthorize("hasRole('CLIENTE')")                
-	public ResponseEntity<SolicitacaoDTO> register(@RequestBody SolicitacaoFormDTO dto)  {
+	public ResponseEntity<SolicitacaoDTO> register(@RequestBody RegistrarSolicitacaoDTO dto)  {
 		return ResponseEntity.status(201).body(new SolicitacaoDTO(service.registrar(dto)));
 	}
 
@@ -114,7 +115,7 @@ public class SolicitacaoController {
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }), })
 	@PreAuthorize("hasRole('FUNCIONARIO')")                
-	public ResponseEntity<SolicitacaoDTO> efetuarOrcamento(@Valid @RequestBody OrcamentoDTO solicitacaoDTO) throws ValidationException  {
+	public ResponseEntity<SolicitacaoDTO> efetuarOrcamento(@Valid @RequestBody OrcamentoFormDTO solicitacaoDTO) throws ValidationException  {
 		return ResponseEntity.ok().body(new SolicitacaoDTO(service.efetuarOrcamento(solicitacaoDTO)));
 	}
 	

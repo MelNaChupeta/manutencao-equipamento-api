@@ -28,7 +28,7 @@ public class CategoriaService {
     @Transactional(rollbackOn = Exception.class)
     public Categoria update(CategoriaFormDTO categoriaDTO , Long id) {
         Categoria categoriaExists = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
-        categoriaExists.setDescricao(categoriaDTO.descricao());
+        categoriaExists.setNome(categoriaDTO.nome());
         categoriaExists = repository.save(categoriaExists);
         return categoriaExists;
     }

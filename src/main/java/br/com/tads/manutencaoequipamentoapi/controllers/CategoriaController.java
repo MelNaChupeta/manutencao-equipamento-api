@@ -106,7 +106,7 @@ public class CategoriaController {
 	}
 
 	@GetMapping
-	@Operation(summary = "Buscar categoria")
+	@Operation(summary = "Buscar categorias")
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
