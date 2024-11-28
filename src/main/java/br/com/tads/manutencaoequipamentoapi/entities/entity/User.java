@@ -47,7 +47,7 @@ public class User implements UserDetails{
     private String senha;
     @Column(name="NOME" , length=100 , nullable = false)
     private String nome;
-    @Column(name="CELULAR" , length=100)
+    @Column(name="CELULAR" , length=50)
     private String celular;
     private boolean status;
     @Enumerated(EnumType.STRING)

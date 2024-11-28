@@ -22,13 +22,15 @@ public class Cliente extends User{
     private String cpf;
     @Column(name="ENDERECO" , length = 100)
     private String endereco;
+    @Column(name="CIDADE" , length = 100)
     private String cidade;
+    @Column(name="ESTADO" , length = 50)
     private String estado;
     private int numero;
     @Column(name="CEP" , length = 8)
     private String cep;
 
-    public Cliente(ClienteFormDTO clienteDTO) {
+    public Cliente(ClienteFormDTO clienteDTO) { 
         super(clienteDTO.email(),clienteDTO.nome() ,  clienteDTO.celular() , true);
         this.cpf = clienteDTO.cpf();
         this.cep = clienteDTO.cep();
