@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import br.com.tads.manutencaoequipamentoapi.entities.entity.EstadoSolicitacao;
 import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -16,16 +17,21 @@ public class SolicitacaoSpecification implements Specification<Solicitacao> {
 
     private Long clientId;
     private Long funcionarioId;
-    private LocalDate dataAbertura;
+    private LocalDate dataAberturaInicial;
+    private LocalDate dataAberturaFinal;
     private boolean hoje;
     private boolean todas;
+    private EstadoSolicitacao estado;
 
-    public SolicitacaoSpecification(Long clientId, Long funcionarioId, LocalDate dataAbertura, boolean hoje, boolean todas) {
+    public SolicitacaoSpecification(Long clientId, Long funcionarioId, LocalDate dataAberturaInicial, LocalDate dataAberturaFinal, boolean hoje, boolean todas , String estado) {
         this.clientId = clientId;
         this.funcionarioId = funcionarioId;
-        this.dataAbertura = dataAbertura;
+        this.dataAberturaInicial = dataAberturaInicial;
+        this.dataAberturaFinal = dataAberturaFinal;
         this.hoje = hoje;
         this.todas = todas;
+        if(estado != null) 
+            this.estado = EstadoSolicitacao.valueOf(estado.toUpperCase());
     }
 
     @Override
@@ -48,13 +54,23 @@ public class SolicitacaoSpecification implements Specification<Solicitacao> {
             ));
         }
 
-        if (dataAbertura != null) {
-            predicates.add(criteriaBuilder.equal(criteriaBuilder.function("DATE_TRUNC", LocalDate.class, criteriaBuilder.literal("day"), root.get("dtHrCriacao")), dataAbertura));
+        if (dataAberturaInicial != null && dataAberturaFinal != null) {
+           // predicates.add(criteriaBuilder.equal(criteriaBuilder.function("DATE_TRUNC", LocalDate.class, criteriaBuilder.literal("day"), root.get("dtHrCriacao")), dataAberturaInicial));
+        
+            predicates.add(criteriaBuilder.between(
+                root.get("dtHrCriacao").as(LocalDate.class),
+                dataAberturaInicial,
+                dataAberturaFinal
+            ));
         }
 
         if (hoje) {
             LocalDate today = LocalDate.now();
             predicates.add(criteriaBuilder.equal(criteriaBuilder.function("DATE_TRUNC", LocalDate.class, criteriaBuilder.literal("day"), root.get("dtHrCriacao")), today));
+        }
+
+        if(estado  != null) {
+            predicates.add(criteriaBuilder.equal(root.get("estadoAtual"), estado));
         }
         
         query.orderBy(criteriaBuilder.desc(root.get("dtHrCriacao")));
