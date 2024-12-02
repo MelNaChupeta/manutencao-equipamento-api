@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.ManutencaoFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.OrcamentoFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RedirecionarDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RegistrarSolicitacaoDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.RejeitarDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.solicitacao.SolicitacaoDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.ManutencaoFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.OrcamentoFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.RedirecionarDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.RegistrarSolicitacaoDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.RejeitarDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.solicitacao.SolicitacaoDTO;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.services.SolicitacaoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,7 +69,7 @@ public class SolicitacaoController {
 	@SecurityRequirement(name = "bearerAuth")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Sucesso na requisição", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = SolicitacaoDTO.class)) }),
 			@ApiResponse(responseCode = "400", description = "Parametros inv\u00E1lidos", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Response.class)) }),
 			@ApiResponse(responseCode = "403", description = "Não Autorizado", content = {

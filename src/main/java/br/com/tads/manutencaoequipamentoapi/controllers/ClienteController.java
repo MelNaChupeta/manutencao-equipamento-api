@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.cliente.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.cliente.ClienteFormDTO;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.services.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;

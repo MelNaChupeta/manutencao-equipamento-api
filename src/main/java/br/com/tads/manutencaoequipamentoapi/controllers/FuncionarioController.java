@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioEditDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioEditDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioFormDTO;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.services.FuncionarioService;
 import io.swagger.v3.oas.annotations.Operation;

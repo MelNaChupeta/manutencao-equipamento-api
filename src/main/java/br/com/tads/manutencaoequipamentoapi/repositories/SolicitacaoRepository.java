@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Solicitacao;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Solicitacao;
 
 @Repository
 public interface SolicitacaoRepository extends JpaRepository<Solicitacao , Long> , JpaSpecificationExecutor<Solicitacao>{

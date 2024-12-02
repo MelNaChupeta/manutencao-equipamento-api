@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 import br.com.tads.manutencaoequipamentoapi.repositories.UserRepository;
 import br.com.tads.manutencaoequipamentoapi.services.TokenService;
 import jakarta.servlet.FilterChain;

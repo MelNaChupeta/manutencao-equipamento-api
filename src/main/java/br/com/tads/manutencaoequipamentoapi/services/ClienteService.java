@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Util;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.cliente.ClienteFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.dto.cliente.ClienteDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.cliente.ClienteFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Cliente;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Role;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.repositories.ClienteRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.UserRepository;
@@ -36,7 +36,7 @@ public class ClienteService {
         String senha = generateRandomPassword();
         cliente.setSenha(senha);
         cliente = clienteRepository.save(cliente);
-        emailService.sendHtmlEmail("math.christo@gmail.com" , "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), senha));
+        emailService.sendHtmlEmail("rafaelrre90@gmail.com" , "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), senha));
         return new ClienteDTO(cliente);
     }
 

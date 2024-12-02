@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Cliente;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
 

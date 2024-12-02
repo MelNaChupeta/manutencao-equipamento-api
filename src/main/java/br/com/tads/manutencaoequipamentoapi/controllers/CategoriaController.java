@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
+import br.com.tads.manutencaoequipamentoapi.models.dto.categoria.CategoriaDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.categoria.CategoriaFormDTO;
 import br.com.tads.manutencaoequipamentoapi.services.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

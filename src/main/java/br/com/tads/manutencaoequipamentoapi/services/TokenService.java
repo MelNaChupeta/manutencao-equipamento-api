@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.user.LoginDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.user.UserDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.dto.user.LoginDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.user.UserDTO;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

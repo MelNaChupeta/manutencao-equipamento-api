@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.categoria.CategoriaFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Categoria;
+import br.com.tads.manutencaoequipamentoapi.models.dto.categoria.CategoriaDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.categoria.CategoriaFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Categoria;
 import br.com.tads.manutencaoequipamentoapi.repositories.CategoriaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

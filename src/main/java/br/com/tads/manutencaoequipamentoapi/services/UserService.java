@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 import br.com.tads.manutencaoequipamentoapi.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 

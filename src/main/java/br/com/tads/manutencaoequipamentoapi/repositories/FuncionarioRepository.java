@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Funcionario;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario , Long>{

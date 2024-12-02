@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.com.tads.manutencaoequipamentoapi.commom.Response;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.user.LoginDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.dto.user.LoginDTO;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 
 @Service
 public class AuthenticationService {

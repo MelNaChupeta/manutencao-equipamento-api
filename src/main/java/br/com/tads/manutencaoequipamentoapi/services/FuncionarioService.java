@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioEditDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.dto.funcionario.FuncionarioFormDTO;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Funcionario;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.Role;
-import br.com.tads.manutencaoequipamentoapi.entities.entity.User;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioEditDTO;
+import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioFormDTO;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Funcionario;
+import br.com.tads.manutencaoequipamentoapi.models.entity.Role;
+import br.com.tads.manutencaoequipamentoapi.models.entity.User;
 import br.com.tads.manutencaoequipamentoapi.exceptions.ValidationException;
 import br.com.tads.manutencaoequipamentoapi.repositories.FuncionarioRepository;
 import br.com.tads.manutencaoequipamentoapi.repositories.UserRepository;
