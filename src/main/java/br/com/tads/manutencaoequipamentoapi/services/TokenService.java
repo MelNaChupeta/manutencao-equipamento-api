@@ -65,13 +65,15 @@ public class TokenService {
                 .build()
                 .parseClaimsJws(token).getBody();
         ObjectMapper mapper = new ObjectMapper();
-        UserDTO user = null;
+        User user = null;
         try {
-            user = mapper.readValue(claims.getSubject(), UserDTO.class);
-        } catch (JsonProcessingException e) {
+            user = userService.findById(Long.parseLong(claims.getSubject()));
+            return user.getId();
+        }  catch (Exception e) {
             e.printStackTrace();
-        }
-        return user.id();
+        } 
+
+        return null;
     }
 
     @Transactional
@@ -87,11 +89,13 @@ public class TokenService {
 
         if (user.isStatus()) {
             UserDTO subject = new UserDTO(user.getId(), user.getEmail(), user.getNome(), user.getRole().getDescricao());
+            
             Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            
             ObjectMapper mapper = new ObjectMapper();
             token = Jwts.builder()
                     .setIssuer("mutencaoequipamentoapi")
-                    .setSubject(mapper.writeValueAsString(subject))
+                    .setSubject(subject.id().toString())
                     .claim("id", subject.id())
                     .claim("email", subject.email())
                     .claim("nome", subject.nome())

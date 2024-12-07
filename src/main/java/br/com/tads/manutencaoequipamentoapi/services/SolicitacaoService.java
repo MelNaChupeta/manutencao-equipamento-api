@@ -126,8 +126,12 @@ public class SolicitacaoService {
 
     @Transactional(rollbackOn = Exception.class)
     public Solicitacao aprovar(Long id) throws ValidationException {
+        Cliente user = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        validaSolicitacaoCliente(solicitacao , user);
         
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ORCADA))
                 throw new ValidationException("a solicitação já passou da etapa de aprovação");
@@ -140,9 +144,12 @@ public class SolicitacaoService {
 
     @Transactional(rollbackOn = Exception.class)
     public Solicitacao rejeitar(RejeitarDTO dto , Long id) throws ValidationException {
-       
+        Cliente user = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
+        
+        validaSolicitacaoCliente(solicitacao , user);
         
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ORCADA))
                 throw new ValidationException("o orçamento já foi analisado");
@@ -172,9 +179,14 @@ public class SolicitacaoService {
 
     @Transactional(rollbackOn = Exception.class)
     public Solicitacao resgatar(Long id) throws ValidationException {
+        Cliente user = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
+        
+        validaSolicitacaoCliente(solicitacao , user);
+
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.REJEITADA))
                 throw new ValidationException("o equipamento já foi resgatado");
         
@@ -186,9 +198,12 @@ public class SolicitacaoService {
 
     @Transactional(rollbackOn = Exception.class)
     public Solicitacao pagar(Long id) throws ValidationException {
+        Cliente user = (Cliente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
+        validaSolicitacaoCliente(solicitacao , user);
+
         if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.ARRUMADA))
             throw new ValidationException("o equipamento ainda não foi arrumado");
         
@@ -239,5 +254,10 @@ public class SolicitacaoService {
             movimentacao.setFuncionario((Funcionario) user);
         }
         movimentacaoRepository.save(movimentacao);
+    }
+
+    public void validaSolicitacaoCliente(Solicitacao solicitacao , Cliente cliente) throws ValidationException {
+        if(!solicitacao.getClient().getId().equals(cliente.getId()))
+            throw new ValidationException("você não possui permissão para aprovar essa solicitação");
     }
 }
