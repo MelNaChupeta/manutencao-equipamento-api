@@ -45,11 +45,11 @@ public class ClienteService {
             cliente.setCep(Util.onlyNumbers(cliente.getCep()));
         cliente.setCpf(Util.onlyNumbers(cliente.getCpf()));
        
-        Optional<User> email = userRepository.findByEmail(cliente.getEmail());
+        Optional<User> email = userRepository.findByEmailAndStatus(cliente.getEmail() , true);
         if(email.isPresent()) {
             throw new ValidationException("o Email já consta na base de dados");
         }
-        Optional<Cliente> cpf = clienteRepository.findByCpf(cliente.getCpf());
+        Optional<Cliente> cpf = clienteRepository.findByCpfAndStatus(cliente.getCpf() , true);
         if(cpf.isPresent()){
             throw new ValidationException("o Cpf já consta na base de dados");
         }

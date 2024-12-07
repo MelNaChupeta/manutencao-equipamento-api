@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.tads.manutencaoequipamentoapi.models.dto.funcionario.FuncionarioDTO;
@@ -53,7 +54,11 @@ public class FuncionarioService {
         }
     }
 
-    public Boolean delete(Long id) {
+    public Boolean delete(Long id) throws ValidationException {
+        Funcionario user = (Funcionario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user.getId().equals(id)) {
+            throw new  ValidationException("O funcionário não pode excluir a si mesmo");
+        }
         Funcionario funcionarioExists = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Funcionário não encontrado"));
         funcionarioExists.setStatus(false);
         funcionarioExists = repository.save(funcionarioExists);

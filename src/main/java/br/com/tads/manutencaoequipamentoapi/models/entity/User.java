@@ -51,8 +51,10 @@ public class User implements UserDetails{
     @Column(name="CELULAR" , length=50)
     private String celular;
     private boolean status;
+    
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Column(name = "ultimo_login", columnDefinition = "TIMESTAMP")
     private LocalDateTime ultimoLogin;
     

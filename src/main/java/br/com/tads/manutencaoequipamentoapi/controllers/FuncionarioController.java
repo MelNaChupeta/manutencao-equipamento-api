@@ -83,7 +83,7 @@ public class FuncionarioController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }),
 			@ApiResponse(responseCode = "504", description = "Timeout", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class)) }), })
-	public ResponseEntity<Boolean> deletar(@PathVariable("id") Long id) {
+	public ResponseEntity<Boolean> deletar(@PathVariable("id") Long id) throws ValidationException {
 		return ResponseEntity.ok().body(service.delete(id));
 	}
     
