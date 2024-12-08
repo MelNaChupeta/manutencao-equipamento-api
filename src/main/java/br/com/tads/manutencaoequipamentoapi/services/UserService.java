@@ -19,8 +19,8 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Erro ao buscar usuário"));
     }
     
-    public User findByEmail (String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("usuário não encontrado : " + email));
+    public User findByEmail (String email , boolean  status) {
+        return userRepository.findByEmailAndStatus(email , status).orElseThrow(() -> new EntityNotFoundException("usuário não encontrado : " + email));
     }
 
    /* public int getUltimoAcesso(User user) {

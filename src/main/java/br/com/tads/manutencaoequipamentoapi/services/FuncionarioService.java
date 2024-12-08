@@ -48,7 +48,7 @@ public class FuncionarioService {
     }
 
     public void validaDadosFuncionario(Funcionario entity) throws ValidationException {
-        Optional<User> email = userRepository.findByEmail(entity.getEmail());
+        Optional<User> email = userRepository.findByEmailAndStatus(entity.getEmail() , true);
         if(email.isPresent()) {
             throw new ValidationException("o email já consta na base de dados");
         }

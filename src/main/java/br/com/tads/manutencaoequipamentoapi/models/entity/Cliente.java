@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class Cliente extends User{
     
-    @Column(name="CPF" , length = 11 , unique = true)
+    @Column(name="CPF" , length = 11)
     private String cpf;
     @Column(name="ENDERECO" , length = 100)
     private String endereco;

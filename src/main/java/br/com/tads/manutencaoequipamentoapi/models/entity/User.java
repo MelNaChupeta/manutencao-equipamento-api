@@ -42,7 +42,7 @@ public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="EMAIL" , length=64 , unique=true , nullable = false)
+    @Column(name="EMAIL" ,  nullable = false)
     private String email;
     @Column(name="SENHA" , nullable = false)
     private String senha;
@@ -94,11 +94,6 @@ public class User implements UserDetails{
         this.status = true;
     }
     
-    @PreUpdate
-    public void onPreUpdate() {
-        this.dtHrAlteracao = LocalDateTime.now();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

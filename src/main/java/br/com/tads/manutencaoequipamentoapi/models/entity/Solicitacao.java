@@ -42,14 +42,14 @@ public class Solicitacao {
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name="cliente_id")
+    @JoinColumn(name="cliente_id" , nullable = false)
     private Cliente client;
     
     @ManyToOne
     @JoinColumn(name="funcionario_id")
     private Funcionario funcionario;
 
-    @Column(name="descricao_equipamento" , length=30)
+    @Column(name="descricao_equipamento" , length=30 , nullable = false)
     private String descricaoEquipamento; 
     
     @CreationTimestamp

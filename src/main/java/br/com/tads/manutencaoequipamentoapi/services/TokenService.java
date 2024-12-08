@@ -82,7 +82,7 @@ public class TokenService {
         Date dateExpiration = new Date(today.getTime() + Long.parseLong(expiration));
         String token = null;
 
-        User user = userService.findByEmail(loginDTO.email());
+        User user = userService.findByEmail(loginDTO.email() , true);
         String senha = userService.findById(user.getId()).getPassword();
         em.refresh(user);
         user.setSenha(senha);    
