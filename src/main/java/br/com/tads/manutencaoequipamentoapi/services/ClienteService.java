@@ -36,7 +36,7 @@ public class ClienteService {
         String senha = generateRandomPassword();
         cliente.setSenha(senha);
         cliente = clienteRepository.save(cliente);
-        emailService.sendHtmlEmail("rafaelrre90@gmail.com" , "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), senha));
+        emailService.sendHtmlEmail(cliente.getEmail(), "Novo cadastro de usuário" , GenerateEmailHtmlService.generatePasswordEmailTemplate(cliente.getUsername(), senha));
         return new ClienteDTO(cliente);
     }
 
@@ -47,11 +47,11 @@ public class ClienteService {
        
         Optional<User> email = userRepository.findByEmailAndStatus(cliente.getEmail() , true);
         if(email.isPresent()) {
-            throw new ValidationException("o Email já consta na base de dados");
+            throw new ValidationException("o email já consta na base de dados");
         }
         Optional<Cliente> cpf = clienteRepository.findByCpfAndStatus(cliente.getCpf() , true);
         if(cpf.isPresent()){
-            throw new ValidationException("o Cpf já consta na base de dados");
+            throw new ValidationException("o cpf já consta na base de dados");
         }
     }
 

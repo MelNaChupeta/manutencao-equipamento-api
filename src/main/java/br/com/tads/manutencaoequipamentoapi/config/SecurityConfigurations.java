@@ -50,7 +50,7 @@ public class SecurityConfigurations {
                 .requestMatchers("/cliente/registrar/**").permitAll()
                 .requestMatchers("/funcionario/registrar/**").permitAll()
                 .requestMatchers("/receita/**").hasRole("FUNCIONARIO")
-                .requestMatchers("/categoria/**").hasRole("FUNCIONARIO")
+                //.requestMatchers("/categoria/**").hasRole("FUNCIONARIO")
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf.disable())

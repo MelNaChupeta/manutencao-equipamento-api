@@ -166,7 +166,7 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Erro ao encontrar solicitação"));
         
-        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.APROVADA))
+        if(!solicitacao.getEstadoAtual().equals(EstadoSolicitacao.APROVADA) && !solicitacao.getEstadoAtual().equals(EstadoSolicitacao.REDIRECIONADA))
                 throw new ValidationException("o orçamento ainda não foi aprovado");
 
         solicitacao.setEstadoAtual(EstadoSolicitacao.ARRUMADA);
